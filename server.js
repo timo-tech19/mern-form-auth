@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 app.use("/api/auth", authRouter);
 
 // Initialize Server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`App running on port: ${PORT}`);
 });
 

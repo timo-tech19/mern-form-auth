@@ -1,0 +1,23 @@
+{
+  "name": "mern-form-auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timo-tech19/mern-form-auth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/timo-tech19/mern-form-auth/issues"
+  },
+  "homepage": "https://github.com/timo-tech19/mern-form-auth#readme",
+  "dependencies": {
+    "mongoose": "^5.11.18"
+  }
+}

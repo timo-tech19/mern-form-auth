@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const ErrorResponse = require("../utils/errorResponse");
 exports.register = async (req, res, next) => {
     const { username, email, password } = req.body;
 
@@ -10,15 +10,9 @@ exports.register = async (req, res, next) => {
             password,
         });
 
-        res.status(201).json({
-            status: "success",
-            user,
-        });
+        sendToken(user, 201, res);
     } catch (error) {
-        res.status(500).json({
-            status: "fail",
-            message: error.message,
-        });
+        next(error);
     }
 };
 
@@ -26,40 +20,25 @@ exports.login = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!(email && password)) {
-        res.status(400).json({
-            status: "fail",
-            message: "Please provide email and password",
-        });
+        next(new ErrorResponse("Please provide email and password", 400));
     }
 
     try {
         const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
-            res.status(404).json({
-                status: "fail",
-                message: "Invalid Email or Password",
-            });
+            next(new ErrorResponse("Invalid Email or Password", 401));
         }
 
         // isMatch is found on every created document
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
-            res.status(404).json({
-                status: "fail",
-                message: "Invalid Email or Password",
-            });
+            next(new ErrorResponse("Invalid Email or Password", 400));
         }
 
-        res.status(200).json({
-            status: "success",
-            token: `${Date.now()}`,
-        });
+        sendToken(user, 200, res);
     } catch (err) {
-        res.status(500).json({
-            status: "fail",
-            message: `Error: ${err}`,
-        });
+        next(err);
     }
 };
 
@@ -69,4 +48,12 @@ exports.forgotPassword = (req, res, next) => {
 
 exports.resetPassword = (req, res, next) => {
     res.send("Reset Password route");
+};
+
+const sendToken = (user, statusCode, res) => {
+    const token = user.getSignedToken();
+    res.status(statusCode).json({
+        status: "success",
+        token,
+    });
 };

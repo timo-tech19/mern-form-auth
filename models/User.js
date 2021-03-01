@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -43,6 +44,15 @@ UserSchema.pre("save", async function (next) {
 
 UserSchema.methods.matchPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
+};
+
+// Signing a JWT
+// This requires a payload and a secret
+// The payload has to uniquely identity a given object in the database
+UserSchema.methods.getSignedToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE,
+    });
 };
 
 const User = mongoose.model("User", UserSchema);

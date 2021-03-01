@@ -1,6 +1,7 @@
 require("dotenv").config({ path: `${__dirname}/config.env` });
 const express = require("express");
 const connectDB = require("./config/db");
+const errorHandler = require("./middleware/error");
 const authRouter = require("./routes/auth");
 
 // connect db
@@ -16,6 +17,9 @@ const PORT = process.env.PORT || 3000;
 
 // Hook in auth Router
 app.use("/api/auth", authRouter);
+
+// Error handler should be last piece of middleware
+app.use(errorHandler);
 
 // Initialize Server
 const server = app.listen(PORT, () => {

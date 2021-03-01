@@ -1,6 +1,10 @@
 require("dotenv").config({ path: `${__dirname}/config.env` });
 const express = require("express");
+const connectDB = require("./config/db");
 const authRouter = require("./routes/auth");
+
+// connect db
+connectDB();
 
 // Initialize our express app
 const app = express();
@@ -16,4 +20,12 @@ app.use("/api/auth", authRouter);
 // Initialize Server
 app.listen(PORT, () => {
     console.log(`App running on port: ${PORT}`);
+});
+
+// Gracefully shut down server for unexpected errors
+process.on("unhandledRejection", (error, promise) => {
+    console.log(`Logged Error: ${error}`);
+    server.close(() => {
+        process.exit(1);
+    });
 });

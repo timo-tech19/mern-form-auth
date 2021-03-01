@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -22,6 +23,20 @@ const UserSchema = new mongoose.Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+});
+
+// Run pre middleware before saving user
+// function is used to have access to this
+UserSchema.pre("save", async function () {
+    // this point to current document to be saved
+
+    // do not encrpyt if sent password already exist in DB
+    if (!this.isModified("password")) {
+        next();
+    }
+
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
 });
 
 const User = mongoose.model("User", UserSchema);

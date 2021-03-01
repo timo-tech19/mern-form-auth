@@ -3,6 +3,7 @@ const express = require("express");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 const authRouter = require("./routes/auth");
+const privateRouter = require("./routes/private");
 
 // connect db
 connectDB();
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 3000;
 
 // Hook in auth Router
 app.use("/api/auth", authRouter);
+app.use("/api/private", privateRouter);
 
 // Error handler should be last piece of middleware
 app.use(errorHandler);

@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
 
 // Run pre middleware before saving user
 // function is used to have access to this
-UserSchema.pre("save", async function () {
+UserSchema.pre("save", async function (next) {
     // this point to current document to be saved
 
     // do not encrpyt if sent password already exist in DB
@@ -35,6 +35,8 @@ UserSchema.pre("save", async function () {
         next();
     }
 
+    // hash takes in some text and a saltRound number to generate a salt and returns a harshed string
+    // The higher the salt round the better the hashing process but uses more cpu resources
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });

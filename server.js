@@ -4,12 +4,16 @@ const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 const authRouter = require("./routes/auth");
 const privateRouter = require("./routes/private");
+const cors = require("cors");
 
 // connect db
 connectDB();
 
 // Initialize our express app
 const app = express();
+
+// implement cors
+app.use(cors());
 
 // run middleware to parse res.body with json
 app.use(express.json());

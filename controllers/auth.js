@@ -127,5 +127,6 @@ const sendToken = (user, statusCode, res) => {
     res.status(statusCode).json({
         status: "success",
         token,
+        user: { name: user.username, email: user.email },
     });
 };
